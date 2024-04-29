@@ -16,5 +16,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     shadowColor: '#000000', // Color de la sombra
     elevation: 5,
+    borderRadius: 12,
+    margin:  7
   },
 });

@@ -1,16 +1,17 @@
+// Home.js
 import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import products from '../data/products.json';
 import ProductItem from "../components/ProductItem";
 import HeaderHome from "../components/HeaderHome";
 
-const ItemListCategory = () => {
+const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <HeaderHome/>
       <FlatList
         data={products}
-        renderItem={({ item }) => <ProductItem product={item} />}
+        renderItem={({ item }) => <ProductItem product={item} navigation={navigation} />}
         keyExtractor={(producto) => producto.id}
       />
     </View>
@@ -26,4 +27,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ItemListCategory;
+export default Home;

@@ -4,10 +4,11 @@ import { AntDesign  } from "@expo/vector-icons"
 import React from 'react'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Cart from '../screens/Cart'
+
 import HomeStackNavigator from './HomeStackNavigator'
 import SettingsStackNavigator from './SettingsStackNavigator'
 import AuthStackNavigator from './AuthStackNavigator'
+import CartStack from './CartStackNavigator'
 
 const Tab = createBottomTabNavigator()
 
@@ -37,7 +38,7 @@ const BottomTabNavigator = () => {
             />
             <Tab.Screen 
                 name="Cart"
-                component={Cart}
+                component={CartStack}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View>
