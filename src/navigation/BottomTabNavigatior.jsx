@@ -16,7 +16,7 @@ const BottomTabNavigator = () => {
     return (
         <Tab.Navigator
             tabBarOptions={{
-                showLabel: false, // Oculta las etiquetas de texto
+                showLabel: false,
             }}
         >
             <Tab.Screen
@@ -32,7 +32,7 @@ const BottomTabNavigator = () => {
                              />
                         </View>
                     ),
-                    headerShown: false, // Oculta el título del header
+                    headerShown: false,
                 }}
                 
             />

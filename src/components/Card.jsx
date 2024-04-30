@@ -14,7 +14,7 @@ export default Card;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
-    shadowColor: '#000000', // Color de la sombra
+    shadowColor: '#000000',
     elevation: 5,
     borderRadius: 12,
     margin:  7
