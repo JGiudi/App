@@ -1,32 +1,26 @@
-import { FlatList, Pressable, StyleSheet, Text, View} from 'react-native'
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import CartData from '../data/cart.json'
+import { useSelector } from 'react-redux'
 import ProductCart from '../components/ProductCart'
+import { removeCartItem } from '../features/Cart/cartSlice'
+import { usePostOrderMutation } from '../services/shopService'
 
 const Cart = () => {
-  // Calcula el total sumando los precios de todos los productos en el carrito
-  const total = CartData.reduce((acumulador, currentItem) => acumulador += currentItem.price * currentItem.quantity, 0)
+  const { items } = useSelector(state => state.cart.value)
+
+  const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={CartData}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => {
-          return (
-            <ProductCart
-              product={item}
-            />
-          )
-        }}
+        data={items}
+        keyExtractor={item => item.id.toString()}
+        renderItem={({ item }) => <ProductCart product={item} />}
       />
-      {/* Contenedor del total y el botón de confirmar */}
       <View style={styles.totalContainer}>
-        {/* Botón de confirmar */}
         <Pressable style={styles.confirmButton} onPress={() => console.log("Confirmado")}>
           <Text style={styles.confirmButtonText}>Confirm</Text>
         </Pressable>
-        {/* Total */}
         <Text style={styles.totalText}>Total: ${total.toFixed(2)}</Text>
       </View>
     </View>

@@ -1,11 +1,16 @@
-// Home.js
 import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import products from '../data/products.json';
 import ProductItem from "../components/ProductItem";
 import HeaderHome from "../components/HeaderHome";
+import { useGetAllProductsQuery } from "../services/shopService";
 
 const Home = ({ navigation }) => {
+  const {data: products, error} = useGetAllProductsQuery()
+
+  if (error) {
+    return <Text>Error al cargar los datos</Text>;
+  }
+
   return (
     <View style={styles.container}>
       <HeaderHome/>

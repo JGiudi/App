@@ -1,12 +1,26 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import Card from './Card'
+import { useDispatch, useSelector } from 'react-redux';
+import { decrement, increment } from '../features/Counter/countSlice';
+import { removeCartItem } from "../features/Cart/cartSlice"
 
 const ProductItem = ({ product, navigation }) => {
-    const handleDelete = () => {
-        // Aquí puedes implementar la lógica para eliminar el producto
-        console.log('Producto eliminado:', product.title);
-    };
+  const dispatch = useDispatch()
+  const [inputToAdd, setInputToAdd] = useState(null);
+
+  const handleRemove = () => {
+    dispatch(removeCartItem({ id: product.id }))
+  }
+  const handleIncrement = () =>{
+    dispatch(increment({id: product.id}))
+    console.log("hice click")
+  }
+  const handleDecrement = () =>{
+    dispatch(decrement({id: product.id}))
+    console.log("hice click")
+  }
+
   return (
     <Pressable onPress={() => navigation.navigate('Detail', { productId: product.id })}>
       <Card>
@@ -18,26 +32,25 @@ const ProductItem = ({ product, navigation }) => {
           <View style={styles.contentContainer}>
             <View style={styles.textContainer}>
               <Text style={styles.textCategory}>{product.title}</Text>
-            <Pressable style={styles.deleteButton} onPress={handleDelete}>
-              <Text style={styles.deleteButtonText}>Eliminar</Text>
-            </Pressable>
+              <Pressable
+                style={styles.deleteButton}
+                onPress={handleRemove}>
+                <Text style={styles.deleteButtonText}>Eliminar</Text>
+              </Pressable>
               <Text style={styles.textPrice}>${product.price}</Text>
             </View>
             <View style={styles.bottomContainer}>
-
-
-              <Pressable style={styles.button} onPress={() => console.log("+1")}>
+              <Pressable
+                style={styles.button}
+                onPress={handleIncrement}>
                 <Text style={styles.buttonText}>+</Text>
               </Pressable>
-
-
-              <Text style={styles.quantityText}>{product.quantity}</Text>
-
-
-              <Pressable style={styles.button} onPress={() => console.log("-1")}>
+              <Text style={styles.quantityText}>{product.quantity}</Text> 
+              <Pressable
+                style={styles.button}
+                onPress={handleDecrement}> 
                 <Text style={styles.buttonText}>-</Text>
               </Pressable>
-    
             </View>
           </View>
         </View>
@@ -48,68 +61,71 @@ const ProductItem = ({ product, navigation }) => {
 
 export default ProductItem
 
-const styles = StyleSheet.create({
-    container: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      height: 135,
-      paddingHorizontal: 10,
-    },
-    image: {
-      height: "100%",
-      width: "35%",
-      borderRadius: 5,
-      marginRight: 10,
-    },
-    contentContainer: {
-      flex: 1,
-    },
-    textContainer: {
-      flex: 1,
-    },
-    textCategory: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      top: 10
-    },
-    textPrice: {
-      fontSize: 16,
-      color: 'gray',
-      top:"54%"
-    },
-    bottomContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginLeft: 'auto',
-    },
-    button: {
-      paddingHorizontal: 20,
-      paddingVertical: 10,
-      borderRadius: 5,
-      marginHorizontal: 5,
-    },
-    buttonText: {
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: 20,
-    },
-    quantityText: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      marginRight: 10,
-    },
-    deleteButton: {
-      backgroundColor: 'red',
-      paddingHorizontal: 10,
-      paddingVertical: 5,
-      borderRadius: 5,
-      width:"31%",
-      marginLeft: 'auto',
-      bottom:16
-    },
-    deleteButtonText: {
-      color: 'white',
-      fontWeight: 'bold',
-},
-  })
 
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 135,
+  },
+  image: {
+    height: "100%",
+    width: "35%",
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  textCategory: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    top: 10
+  },
+  textPrice: {
+    fontSize: 16,
+    color: 'gray',
+    top: "54%"
+  },
+  bottomContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 'auto',
+  },
+  button: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  buttonText: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  quantityText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    width: "30%",
+    marginLeft: 'auto',
+    right: "5%",
+    bottom: 14,
+
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: "center",
+    fontSize: 11
+  },
+})

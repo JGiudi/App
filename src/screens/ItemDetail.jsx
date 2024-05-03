@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Button, Image, StyleSheet, Text, View } from "react-native";
-import allProducts from "../data/products.json";
+import { useGetProductByIdQuery } from "../services/shopService"
+import { useDispatch } from "react-redux";
+import { addCartItem } from "../features/Cart/cartSlice";
 
 const ItemDetail = ({ route, navigation }) => {
+
   const { productId: idSelected } = route.params;
-  const [product, setProduct] = useState(null);
+  const {data: product} = useGetProductByIdQuery(idSelected)
+  const dispatch = useDispatch()
 
-  useEffect(() => {
-    // Buscar el producto correspondiente al ID seleccionado
-    const productSelected = allProducts.find((product) => product.id === idSelected);
-    setProduct(productSelected);
-  }, [idSelected]);
-
-  // Verificar si el producto está cargando
-  if (!product) {
-    return <Text>Loading...</Text>; // Mostrar un indicador de carga si el producto está null
+  const handleAddCart = () =>{
+    dispatch(addCartItem({...product, quantity: 1}))
   }
 
-  // Renderizar la vista del producto
+
+
+  if (!product) {
+    return <Text>Loading...</Text>; 
+  }
+
   return (
     <View style={styles.container}>
       <Image source={{ uri: product.images[0] }} resizeMode="cover" style={styles.image} />
@@ -25,7 +27,7 @@ const ItemDetail = ({ route, navigation }) => {
         <Text style={styles.title}>{product.title}</Text>
         <Text style={styles.description}>{product.description}</Text>
         <Text style={styles.price}>${product.price}</Text>
-        <Button title="Add to Cart" onPress={() => {/* Acción al presionar el botón */}} />
+        <Button title="Add to Cart" onPress={handleAddCart} />
       </View>
     </View>
   );
