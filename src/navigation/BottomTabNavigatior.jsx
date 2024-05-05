@@ -51,8 +51,8 @@ const BottomTabNavigator = () => {
                     ),
                 }}
             />
-            <Tab.Screen 
-                name="Auth" 
+            {/* <Tab.Screen 
+                name="Signup" 
                 component={AuthStackNavigator}
                 options={{
                     tabBarIcon: ({ focused }) => (
@@ -65,7 +65,7 @@ const BottomTabNavigator = () => {
                         </View>
                     ),
                 }}
-            />
+            /> */}
             <Tab.Screen 
                 name="Config" 
                 component={SettingsStackNavigator}
