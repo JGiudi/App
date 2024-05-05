@@ -9,6 +9,7 @@ import HomeStackNavigator from './HomeStackNavigator'
 import SettingsStackNavigator from './SettingsStackNavigator'
 import AuthStackNavigator from './AuthStackNavigator'
 import CartStack from './CartStackNavigator'
+import MyProfileStackNavigator from './MyProfileStackNavigator'
 
 const Tab = createBottomTabNavigator()
 
@@ -51,9 +52,9 @@ const BottomTabNavigator = () => {
                     ),
                 }}
             />
-            {/* <Tab.Screen 
-                name="Signup" 
-                component={AuthStackNavigator}
+            <Tab.Screen 
+                name="Mi perfil" 
+                component={MyProfileStackNavigator}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View>
@@ -65,7 +66,7 @@ const BottomTabNavigator = () => {
                         </View>
                     ),
                 }}
-            /> */}
+            />
             <Tab.Screen 
                 name="Config" 
                 component={SettingsStackNavigator}

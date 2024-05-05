@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useDispatch } from "react-redux"
 import { useLoginMutation } from '../services/authService';
 import { setUser } from '../features/User/userSlice';
@@ -7,11 +7,13 @@ import { setUser } from '../features/User/userSlice';
 const Login = ({ navigation }) => {
   const dispatch = useDispatch()
   const [triggerLogin, result] = useLoginMutation()
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
-  
-  useEffect(()=>{
-    if(result.isSuccess){
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  useEffect(() => {
+    if (result.isSuccess) {
       dispatch(
         setUser({
           email: result.data.email,
@@ -19,10 +21,21 @@ const Login = ({ navigation }) => {
         })
       );
     }
+    if (result.isError) {
+      setError("Error al iniciar sesión. Verifica tus credenciales.")
+      setLoading(false)
+    }
   }, [result])
 
   const onSubmit = () => {
-    triggerLogin({email, password})
+    // Validar datos de entrada
+    if (!email || !password) {
+      setError("Por favor ingresa un correo electrónico y una contraseña.")
+      return
+    }
+    setLoading(true)
+    setError("")
+    triggerLogin({ email, password })
   }
 
   const handleSignUpRedirect = () => {
@@ -37,19 +50,22 @@ const Login = ({ navigation }) => {
         placeholder="Correo electrónico"
         keyboardType="email-address"
         autoCapitalize="none"
+        value={email}
         onChangeText={setEmail}
       />
       <TextInput
         style={styles.input}
         placeholder="Contraseña"
+        value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
       <TouchableOpacity onPress={handleSignUpRedirect}>
         <Text style={styles.signupText}>¿No tienes cuenta? Regístrate aquí</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.loginButton} onPress={onSubmit}>
-        <Text style={styles.buttonText}>Iniciar sesión</Text>
+      <TouchableOpacity style={styles.loginButton} onPress={onSubmit} disabled={loading}>
+        {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Iniciar sesión</Text>}
       </TouchableOpacity>
     </View>
   );

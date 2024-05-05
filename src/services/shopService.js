@@ -17,18 +17,26 @@ export const shopApi = createApi({
                 return null
             }
         }),
-        postOrder: builder.mutation({
-            query: ({...order}) =>({
-                url:'orders.json',
-                method: 'POST',
-                body: order
-            })
-        })
-    })
+        getProfileImage: builder.query({
+            query: (localId) => `profileImages/${localId}.json`,
+            providesTags: ['profileImageGet']
+        }),
+        postProfileImage: builder.mutation({
+            query: ({image, localId}) => ({
+                url: `profileImages/${localId}.json`,
+                method: "PUT",
+                body: {
+                    image: image
+                },
+            }),
+            invalidatesTags: ['profileImageGet']
+        }),
+    }),
 })
 
 export const { 
     useGetProductByIdQuery, 
     useGetAllProductsQuery, 
-    usePostOrderMutation 
+    useGetProfileImageQuery,
+    usePostProfileImageMutation,
 } = shopApi
