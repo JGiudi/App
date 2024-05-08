@@ -13,9 +13,9 @@ export const authApi = createApi({
             }),
         }),
         //Add login
-        Login: builder.mutation({
+        signIn: builder.mutation({
             query: ({...auth}) => ({
-                url: `/accounts:LoginWithPassword?key=${apiKey}`,
+                url: `/accounts:singInWithPassword?key=${apiKey}`,
                 method: "POST",
                 body: auth
             })
@@ -23,4 +23,4 @@ export const authApi = createApi({
     }),
 })
 
-export const { useLoginMutation, useSignUpMutation } = authApi
+export const { useSignInMutation, useSignUpMutation } = authApi

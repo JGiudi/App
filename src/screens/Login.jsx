@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useDispatch } from "react-redux"
-import { useLoginMutation } from '../services/authService';
+import { useSignInMutation } from '../services/authService';
 import { setUser } from '../features/User/userSlice';
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch()
-  const [triggerLogin, result] = useLoginMutation()
+  const [triggerSignIn, signInResult] = useSignInMutation();
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
   useEffect(() => {
-    if (result.isSuccess) {
+    if (signInResult.isSuccess) {
       dispatch(
         setUser({
-          email: result.data.email,
-          idToken: result.data.idToken
+          email: signInResult.data.email,
+          idToken: signInResult.data.idToken
         })
       );
     }
-    if (result.isError) {
+    if (signInResult.isError) {
       setError("Error al iniciar sesión. Verifica tus credenciales.")
       setLoading(false)
     }
-  }, [result])
+  }, [signInResult])
 
   const onSubmit = () => {
     // Validar datos de entrada
@@ -35,7 +35,7 @@ const Login = ({ navigation }) => {
     }
     setLoading(true)
     setError("")
-    triggerLogin({ email, password })
+    triggerSignIn({ email, password })
   }
 
   const handleSignUpRedirect = () => {
@@ -70,6 +70,7 @@ const Login = ({ navigation }) => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

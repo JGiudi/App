@@ -8,7 +8,7 @@ import { usePostProfileImageMutation } from "../services/shopService";
 const ImageSelector = ({ navigation }) => {
     const [image, setImage] = useState(null);
     const { localId } = useSelector((state) => state.auth.value || {});
-    const [triggerPostImage, result] = usePostProfileImageMutation
+    const [triggerPostImage, result] = usePostProfileImageMutation();
     const dispatch = useDispatch();
 
     const verifyCameraPermissions = async () => {

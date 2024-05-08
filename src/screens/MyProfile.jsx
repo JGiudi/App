@@ -3,17 +3,18 @@ import { Image, View, StyleSheet, Text, Button } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { setCameraImage } from "../features/User/userSlice";
+import { useGetProfileImageQuery } from "../services/shopService";
 
 const MyProfile = ({ navigation }) => {
     const [image, setImage] = useState(null);
     const { imageCamera, localId } = useSelector((state) => state.auth.value);
+    const {data: imageFromBase} = useGetProfileImageQuery(localId)
     const dispatch = useDispatch();
 
     const launchCamera = async () => {
         navigation.navigate('Image selector');
     };
 
-    imageFromBase = null
     const defaultImageRoute = "../../assets/images/defaultProfile.png";
 
     return (
