@@ -74,6 +74,7 @@ const Login = ({ navigation }) => {
         <Text style={styles.signupText}>¿No tienes cuenta? Regístrate aquí</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.loginButton} onPress={onSubmit} disabled={loading}>
+        
         {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Iniciar sesión</Text>}
       </TouchableOpacity>
     </View>

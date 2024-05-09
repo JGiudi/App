@@ -1,38 +1,84 @@
 import React, { useState } from "react";
 import { Image, View, StyleSheet, Text, Button } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as ExpoLibrary from "expo-media-library";
 import { useDispatch, useSelector } from "react-redux";
 import { setCameraImage } from "../features/User/userSlice";
-import { usePostProfileImageMutation } from "../services/shopService";
+import { useGetProfileImageQuery, usePostProfileImageMutation } from "../services/shopService";
+
 
 const ImageSelector = ({ navigation }) => {
     const [image, setImage] = useState(null);
-    const { localId } = useSelector((state) => state.auth.value || {});
-    const [triggerPostImage, result] = usePostProfileImageMutation();
-    const dispatch = useDispatch();
+    const [isImageFromCamera, setIsImageFromCamera] = useState(false)
+    const [imageURI, setImageURI] = useState("")
+
+    const { localId } = useSelector((state) => state.auth.value)
+    const { data: imageFromBase } = useGetProfileImageQuery(localId)
+
+
+    const [triggerPostImage, result] = usePostProfileImageMutation()
+
+    console.log(localId);
+
+    const dispatch = useDispatch()
 
     const verifyCameraPermissions = async () => {
-        const { granted } = await ImagePicker.requestCameraPermissionsAsync();
-        return granted;
-    };
+        const {granted} = await ImagePicker.requestCameraPermissionsAsync()
+        return granted
+    }
+
+    const verifyGalleryPermissions = async () => {
+        const {granted} = await ImagePicker.requestMediaLibraryPermissionsAsync()
+        return granted
+    }
+
+    const pickLibraryImage = async () => {
+        try {
+            setIsImageFromCamera(false)
+            const permissionGallery = await verifyGalleryPermissions()
+            if (permissionGallery) {
+                const result = await ImagePicker.launchImageLibraryAsync({
+                    base64: true,
+                    allowsEditing: true,
+                    aspect: [1,1],
+                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                    quality: 0.2,
+                })
+
+                console.log(result);
+
+                if (!result.canceled){
+                    const image = `data:image/jpeg;base64,${result.assets[0].base64}`
+                    setImage(image)
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     const pickImage = async () => {
-        try {
-            const permissionCamera = await verifyCameraPermissions();
+        setIsImageFromCamera(true)
 
+        try {
+            const permissionCamera = await verifyCameraPermissions()
+            
             if (permissionCamera) {
                 let result = await ImagePicker.launchCameraAsync({
                     mediaTypes: ImagePicker.MediaTypeOptions.All,
                     allowsEditing: true,
                     aspect: [1, 1],
                     base64: true,
-                    quality: 0.5,
-                });
-                if (!result.canceled) {
-                    const image = `data:image/jpeg;base64,${result.assets[0].base64}`;
-                    setImage(image);
+                    quality: 0.2    
+                })
+                if (!result.canceled){
+                    setImageURI(result.assets[0].uri)
+                    const image = `data:image/jpeg;base64,${result.assets[0].base64}`
+                    setImage(image)
                 }
             }
+            
         } catch (error) {
             console.log(error);
         }
@@ -40,70 +86,61 @@ const ImageSelector = ({ navigation }) => {
     
     const confirmImage = async () => {
         try {
-            dispatch(setCameraImage(image));
-            triggerPostImage({ image, localId });
-            navigation.goBack();
+            dispatch(setCameraImage(image))
+            triggerPostImage({image, localId})
+            if (isImageFromCamera) {
+                const result = await ExpoLibrary.createAssetAsync(imageURI)
+            }
+            navigation.goBack()
         } catch (error) {
             console.log(error);
         }
     };
 
+    console.log({image});
+
     return (
         <View style={styles.container}>
-            {image ? (
+            {image || imageFromBase ? (
                 <>
-                    <Image source={{ uri: image }} style={styles.image} />
-                    <View style={styles.buttonContainer}>
-                        <Button title="tomar otra foto" onPress={pickImage} style={styles.button} />
-                    </View>
-
-                    <Button title="Confirmar foto" onPress={confirmImage} style={styles.button1} />
+                    <Image source={{ uri: image || imageFromBase?.image }} style={styles.image} />
+                    <Button title="Tomar otra foto" onPress={pickImage} />
+                    <Button title="Galeria" onPress={pickLibraryImage} />
+                    <Button title="Confirmar Foto" onPress={confirmImage} />
                 </>
             ) : (
                 <>
                     <View style={styles.noPhotoContainer}>
-                        <Text style={styles.text}>No hay foto</Text>
+                        <Text>No tienes foto</Text>
                     </View>
-                    <Button title="Tomar foto" onPress={pickImage} />
+                    <AddButton title="Sacar foto" onPress={pickImage} />
                 </>
             )}
         </View>
     );
 };
 
+export default ImageSelector;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
         alignItems: "center",
+        justifyContent: "flex-start",
+        gap: 20,
+        marginTop: 20,
     },
     image: {
         width: 200,
         height: 200,
-        borderRadius: 100,
-        marginBottom: 20,
-    },
-    buttonContainer: {
-        marginBottom: 20,
     },
     noPhotoContainer: {
+        width: 200,
+        height: 200,
+        borderWidth: 2,
+        borderColor: "grey",
+        padding: 10,
+        justifyContent: "center",
         alignItems: "center",
     },
-    text: {
-        fontSize: 17,
-        color: "gray",
-        bottom: 15
-    },
-    button: {
-        marginVertical: 5,
-        color: "blue"
-
-    },
-    button1: {
-        marginTop: 15,
-        color: "blue"
-
-    },
 });
-
-export default ImageSelector;

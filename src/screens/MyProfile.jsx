@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Image, View, StyleSheet, Button } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetProfileImageQuery } from "../services/shopService";
 import { clearUser } from "../features/User/userSlice"
@@ -34,29 +34,32 @@ const MyProfile = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={launchCamera}>
+            {imageFromBase || imageCamera ? (
                 <Image
                     source={{ uri: imageFromBase?.image || imageCamera }}
-                    style={[styles.image, !imageFromBase && styles.defaultImage]}
+                    style={styles.image}
                     resizeMode="cover"
                 />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={launchCamera} style={styles.button}>
-                <Text style={styles.buttonText}>
-                    {imageFromBase || imageCamera
-                        ? "Modificar foto"
-                        : "Agregar foto"}
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={launchLocation} style={styles.button}>
-                <Text style={styles.buttonText}>Mi dirección</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={signOut} style={styles.button}>
-                <Text style={styles.buttonText}>Cerrar sesión</Text>
-            </TouchableOpacity>
+            ) : (
+                <Image
+                    source={require(defaultImageRoute)}
+                    style={styles.image}
+                    resizeMode="cover"
+                />
+            )}
+            <Button
+                onPress={launchCamera}
+                title={
+                    imageFromBase || imageCamera
+                        ? "Modify profile picture"
+                        : "Add profile picture"
+                }
+            />
+            <Button onPress={launchLocation} title="My address" />
+            <Button onPress={signOut} title="Sign out" />
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
