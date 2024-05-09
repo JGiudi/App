@@ -4,6 +4,7 @@ import { baseUrl } from '../databases/realtimeDatabase'
 export const shopApi = createApi({
     reducerPath:"shopApia",
     baseQuery: fetchBaseQuery({ baseUrl: baseUrl }),
+    tagTypes: ['profileImageGet'],
     endpoints: (builder) => ({
         getAllProducts: builder.query({
             query: () => 'products.json',
@@ -21,6 +22,7 @@ export const shopApi = createApi({
             query: (localId) => `profileImages/${localId}.json`,
             providesTags: ['profileImageGet']
         }),
+        
         postProfileImage: builder.mutation({
             query: ({image, localId}) => ({
                 url: `profileImages/${localId}.json`,

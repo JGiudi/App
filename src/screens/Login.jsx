@@ -3,30 +3,39 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator 
 import { useDispatch } from "react-redux"
 import { useSignInMutation } from '../services/authService';
 import { setUser } from '../features/User/userSlice';
+import { insertSession } from '../persistence/index';
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch()
-  const [triggerSignIn, signInResult] = useSignInMutation();
+  const [triggerSignIn, result] = useSignInMutation();
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
   useEffect(() => {
-    if (signInResult.isSuccess) {
-      dispatch(
-        setUser({
-          email: signInResult.data.email,
-          idToken: signInResult.data.idToken
-        })
-      );
+    if (result?.data && result.isSuccess) {
+      insertSession({
+          email: result.data.email,
+          localId: result.data.localId,
+          token: result.data.idToken,
+      })
+          .then((response) => {
+              dispatch(
+                  setUser({
+                      email: result.data.email,
+                      idToken: result.data.idToken,
+                      localId: result.data.localId,
+                  })
+              )
+          })
+          .catch((err) => {
+              console.log(err)
+          })
     }
-    if (signInResult.isError) {
-      setError("Error al iniciar sesión. Verifica tus credenciales.")
-      setLoading(false)
-    }
-  }, [signInResult])
-
+}, [result])
+  
+  
   const onSubmit = () => {
     // Validar datos de entrada
     if (!email || !password) {
