@@ -40,17 +40,17 @@ const ProductItem = ({ product, navigation }) => {
               <Text style={styles.textPrice}>${product.price}</Text>
             </View>
             <View style={styles.bottomContainer}>
-              <Pressable
+              {/* <Pressable
                 style={styles.button}
                 onPress={handleIncrement}>
                 <Text style={styles.buttonText}>+</Text>
-              </Pressable>
-              <Text style={styles.quantityText}>{product.quantity}</Text> 
-              <Pressable
+              </Pressable> */}
+              <Text style={styles.quantityText}> Cantidad: {product.quantity}</Text> 
+              {/* <Pressable
                 style={styles.button}
                 onPress={handleDecrement}> 
                 <Text style={styles.buttonText}>-</Text>
-              </Pressable>
+              </Pressable> */}
             </View>
           </View>
         </View>
@@ -107,9 +107,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   quantityText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
-    marginRight: 10,
+    marginRight: 20,
+    bottom: 5,
+    color: "grey"
   },
   deleteButton: {
     backgroundColor: 'red',

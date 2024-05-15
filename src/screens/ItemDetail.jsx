@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Button, Image, StyleSheet, Text, View } from "react-native";
-import { useGetProductByIdQuery } from "../services/shopService"
+import { useGetProductByIdQuery } from "../services/shopService";
 import { useDispatch } from "react-redux";
 import { addCartItem } from "../features/Cart/cartSlice";
 
 const ItemDetail = ({ route, navigation }) => {
-
   const { productId: idSelected } = route.params;
-  const {data: product} = useGetProductByIdQuery(idSelected)
-  const dispatch = useDispatch()
+  const { data: product } = useGetProductByIdQuery(idSelected);
+  const dispatch = useDispatch();
+  const [quantity, setQuantity] = useState(1);
 
-  const handleAddCart = () =>{
-    dispatch(addCartItem({...product, quantity: 1}))
-  }
+  const handleAddCart = () => {
+    dispatch(addCartItem({ ...product, quantity }));
+  };
 
+  const incrementQuantity = () => {
+    setQuantity(quantity + 1);
+  };
 
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
 
   if (!product) {
-    return <Text>Loading...</Text>; 
+    return <Text>Loading...</Text>;
   }
 
   return (
@@ -27,7 +35,14 @@ const ItemDetail = ({ route, navigation }) => {
         <Text style={styles.title}>{product.title}</Text>
         <Text style={styles.description}>{product.description}</Text>
         <Text style={styles.price}>${product.price}</Text>
-        <Button title="Add to Cart" onPress={handleAddCart} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <View style={styles.quantityContainer}>
+          <Text style={styles.button} onPress={decrementQuantity}>-</Text>
+          <Text style={styles.quantity}>{quantity}</Text>
+          <Text style={styles.button} onPress={incrementQuantity}>+</Text>
+        </View>
+        <Button title="Add to Cart" onPress={handleAddCart} color="#007BFF" />
       </View>
     </View>
   );
@@ -59,6 +74,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "right",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  quantityContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#007BFF",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  quantity: {
+    fontSize: 18,
+    marginHorizontal: 10,
+  },
+  button: {
+    fontSize: 24,
+    color: "#007BFF",
+    paddingHorizontal: 10,
   },
 });
 

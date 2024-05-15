@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCameraImage } from "../features/User/userSlice";
 import { useGetProfileImageQuery, usePostProfileImageMutation } from "../services/shopService";
 
-
 const ImageSelector = ({ navigation }) => {
     const [image, setImage] = useState(null);
     const [isImageFromCamera, setIsImageFromCamera] = useState(false)
@@ -72,6 +71,8 @@ const ImageSelector = ({ navigation }) => {
                     base64: true,
                     quality: 0.2    
                 })
+                /* console.log(result);
+                console.log(result.assets[0].base64.length) */
                 if (!result.canceled){
                     setImageURI(result.assets[0].uri)
                     const image = `data:image/jpeg;base64,${result.assets[0].base64}`
@@ -82,6 +83,7 @@ const ImageSelector = ({ navigation }) => {
         } catch (error) {
             console.log(error);
         }
+
     };
     
     const confirmImage = async () => {
@@ -104,16 +106,16 @@ const ImageSelector = ({ navigation }) => {
             {image || imageFromBase ? (
                 <>
                     <Image source={{ uri: image || imageFromBase?.image }} style={styles.image} />
-                    <Button title="Tomar otra foto" onPress={pickImage} />
-                    <Button title="Galeria" onPress={pickLibraryImage} />
-                    <Button title="Confirmar Foto" onPress={confirmImage} />
+                    <Button title="Take another photo" onPress={pickImage} />
+                    <Button title="Pick photo from gallery" onPress={pickLibraryImage} />
+                    <Button title="Confirm photo" onPress={confirmImage} />
                 </>
             ) : (
                 <>
                     <View style={styles.noPhotoContainer}>
-                        <Text>No tienes foto</Text>
+                        <Text>No photo to show...</Text>
                     </View>
-                    <AddButton title="Sacar foto" onPress={pickImage} />
+                    <Button title="Take a photo" onPress={pickImage} />
                 </>
             )}
         </View>
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         borderWidth: 2,
-        borderColor: "grey",
+        borderColor: "platinum",
         padding: 10,
         justifyContent: "center",
         alignItems: "center",
