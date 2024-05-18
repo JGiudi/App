@@ -64,22 +64,6 @@ const BottomTabNavigator = () => {
                     ),
                 }}
             />
-            <Tab.Screen 
-                name="Config" 
-                component={SettingsStackNavigator}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <View>
-                             <AntDesign 
-                                name="setting" 
-                                size={30} 
-                                color={focused ? "black" : "gray"}
-                             />
-                        </View>
-                    ),
-                }}
-            />
-
         </Tab.Navigator>
     )
 }

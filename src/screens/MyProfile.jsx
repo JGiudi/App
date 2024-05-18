@@ -56,7 +56,7 @@ const MyProfile = ({ navigation }) => {
                 }
             />
             <Button onPress={launchLocation} title="Mi dirección" />
-            <Button onPress={signOut} title="Cerrar sesión" />
+            <Button onPress={signOut} title="cerrar sesión" />
         </View>
     )
 }

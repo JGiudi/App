@@ -1,30 +1,25 @@
 import React from 'react';
-import {View, Switch, StyleSheet} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const SwitchCustom = ({
-    isEnabled = true,
-    setIsEnabled = () => {}
-}) => {
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
+const SwitchCustom = ({ label, onPress }) => {
   return (
-    <View style={styles.container}>
-      <Switch
-        trackColor={{false: '#767577', true: '#81b0ff'}}
-        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={toggleSwitch}
-        value={isEnabled}
-      />
-    </View>
+    <TouchableOpacity onPress={onPress} style={styles.switchContainer}>
+      <Text style={styles.switchLabel}>{label}</Text>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  switchContainer: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 5,
     alignItems: 'center',
-    justifyContent: 'center',
+  },
+  switchLabel: {
+    color: 'white',
+    fontSize: 18,
   },
 });
 

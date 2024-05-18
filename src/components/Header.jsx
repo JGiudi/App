@@ -1,16 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native"; // Importa el hook de navegación
+import MenuDropdown from "./MenuDropdown";
 
 const Header = ({ openDrawer }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigation = useNavigation(); // Obtiene el objeto de navegación
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const goToConfigScreen = () => {
+    navigation.navigate("Config"); // Navega a la pantalla de configuración
+    closeMenu(); // Cierra el menú desplegable después de navegar
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.text}>Bienvenido</Text>
-        <TouchableOpacity onPress={openDrawer}>
-          <Icon name="menu" size={30} color="black" style={styles.menuIcon} />
+        <TouchableOpacity onPress={toggleMenu}>
+          <Icon name={isMenuOpen ? "close" : "menu"} size={30} color="black" style={styles.menuIcon} />
         </TouchableOpacity>
+        <Text style={styles.text}>Bienvenido</Text>
       </View>
+      {isMenuOpen && <MenuDropdown isOpen={isMenuOpen} onClose={closeMenu} />}
     </View>
   );
 };
@@ -21,7 +40,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 70,
+    height: 90,
     backgroundColor: "white",
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
@@ -38,12 +57,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 10,
-    width: "100%",
+    top:25
   },
   text: {
     color: "black",
     fontSize: 22,
-    top: 10,
   },
   menuIcon: {
     marginTop: 13,
