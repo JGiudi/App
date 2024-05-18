@@ -1,19 +1,25 @@
+// En tu componente Home.js
+
 import React from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View, Text } from "react-native";
 import ProductItem from "../components/ProductItem";
-import HeaderHome from "../components/HeaderHome";
+import Header from "../components/Header";
 import { useGetAllProductsQuery } from "../services/shopService";
 
 const Home = ({ navigation }) => {
-  const {data: products, error} = useGetAllProductsQuery()
+  const { data: products, error } = useGetAllProductsQuery();
 
   if (error) {
     return <Text>Error al cargar los datos</Text>;
   }
 
+  const openDrawer = () => {
+    navigation.openDrawer();
+  };
+
   return (
     <View style={styles.container}>
-      <HeaderHome/>
+      <Header openDrawer={openDrawer} />
       <FlatList
         data={products}
         renderItem={({ item }) => <ProductItem product={item} navigation={navigation} />}
@@ -28,7 +34,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     paddingHorizontal: 16,
-    paddingTop: 20,
+    paddingTop: 70,
   },
 });
 

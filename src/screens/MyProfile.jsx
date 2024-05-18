@@ -23,10 +23,10 @@ const MyProfile = ({ navigation }) => {
     const signOut = async () => {
         try {
             const response = await truncateSessionsTable()
-            console.log(response);
+
             dispatch(clearUser())
         } catch (error) {
-            console.log({errorSignOutDB: error});
+
         }
     }
 
@@ -51,12 +51,12 @@ const MyProfile = ({ navigation }) => {
                 onPress={launchCamera}
                 title={
                     imageFromBase || imageCamera
-                        ? "Modify profile picture"
-                        : "Add profile picture"
+                        ? "Cambiar la foto de perfil"
+                        : "Agregar foto de perfil"
                 }
             />
-            <Button onPress={launchLocation} title="My address" />
-            <Button onPress={signOut} title="Sign out" />
+            <Button onPress={launchLocation} title="Mi dirección" />
+            <Button onPress={signOut} title="Cerrar sesión" />
         </View>
     )
 }

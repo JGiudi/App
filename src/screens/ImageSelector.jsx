@@ -17,8 +17,6 @@ const ImageSelector = ({ navigation }) => {
 
     const [triggerPostImage, result] = usePostProfileImageMutation()
 
-    console.log(localId);
-
     const dispatch = useDispatch()
 
     const verifyCameraPermissions = async () => {
@@ -44,15 +42,13 @@ const ImageSelector = ({ navigation }) => {
                     quality: 0.2,
                 })
 
-                console.log(result);
-
                 if (!result.canceled){
                     const image = `data:image/jpeg;base64,${result.assets[0].base64}`
                     setImage(image)
                 }
             }
         } catch (error) {
-            console.log(error)
+
         }
     }
 
@@ -71,8 +67,7 @@ const ImageSelector = ({ navigation }) => {
                     base64: true,
                     quality: 0.2    
                 })
-                /* console.log(result);
-                console.log(result.assets[0].base64.length) */
+
                 if (!result.canceled){
                     setImageURI(result.assets[0].uri)
                     const image = `data:image/jpeg;base64,${result.assets[0].base64}`
@@ -81,7 +76,7 @@ const ImageSelector = ({ navigation }) => {
             }
             
         } catch (error) {
-            console.log(error);
+
         }
 
     };
@@ -95,27 +90,25 @@ const ImageSelector = ({ navigation }) => {
             }
             navigation.goBack()
         } catch (error) {
-            console.log(error);
+
         }
     };
-
-    console.log({image});
 
     return (
         <View style={styles.container}>
             {image || imageFromBase ? (
                 <>
                     <Image source={{ uri: image || imageFromBase?.image }} style={styles.image} />
-                    <Button title="Take another photo" onPress={pickImage} />
-                    <Button title="Pick photo from gallery" onPress={pickLibraryImage} />
-                    <Button title="Confirm photo" onPress={confirmImage} />
+                    <Button title="Tomar otra foto" onPress={pickImage} />
+                    <Button title="Galería" onPress={pickLibraryImage} />
+                    <Button title="Confirmar foto" onPress={confirmImage} />
                 </>
             ) : (
                 <>
                     <View style={styles.noPhotoContainer}>
-                        <Text>No photo to show...</Text>
+                        <Text>No hay foto para mostrar...</Text>
                     </View>
-                    <Button title="Take a photo" onPress={pickImage} />
+                    <Button title="Tomar una foto" onPress={pickImage} />
                 </>
             )}
         </View>

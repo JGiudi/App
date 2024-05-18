@@ -12,7 +12,6 @@ export const cartSlice = createSlice({
     },
     reducers: {
         addCartItem: (state, { payload }) => {
-            //Logic to add product
             const productRepeated = state.value.items.find(
                 (item) => item.id === payload.id
             )
@@ -50,18 +49,10 @@ export const cartSlice = createSlice({
             }
         },
         removeCartItem: (state, { payload }) => {
-            // Encuentra el índice del producto en el carrito
             const indexToRemove = state.value.items.findIndex(item => item.id === payload.id);
-        
-            // Si se encontró el producto en el carrito
             if (indexToRemove !== -1) {
-                // Remueve el producto del arreglo de items
                 state.value.items.splice(indexToRemove, 1);
-        
-                // Calcula el total actualizado
                 const total = state.value.items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-        
-                // Actualiza el estado del carrito con el total y la fecha de actualización
                 state.value = {
                     ...state.value,
                     total,

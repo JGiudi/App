@@ -1,9 +1,12 @@
+// Signup.js
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useSignUpMutation } from '../services/authService';
 import { setUser } from '../features/User/userSlice';
 import { signupSchema } from '../validations/authSchema';
+import { ProgressBar } from 'react-native-paper';
+import { getProgress, getColor } from '../utils/passwordStrength'; 
 
 const Signup = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -18,7 +21,7 @@ const Signup = ({ navigation }) => {
   };
 
   const dispatch = useDispatch();
-  const [triggerSignUp, result ] = useSignUpMutation();
+  const [triggerSignUp, result] = useSignUpMutation();
 
   useEffect(() => {
     if(result.isSuccess){
@@ -29,35 +32,35 @@ const Signup = ({ navigation }) => {
         })
       );
     }
-  });
+  }, [result, dispatch]);
 
   const onSubmit = () => {
     try {
-        setErrorMail("")
-        setErrorPassword("")
-        setErrorConfirmPassword("")
-        const validation = signupSchema.validateSync({email, password, confirmPassword})
-        triggerSignUp({email, password, returnSecureToken: true})
+        setErrorMail("");
+        setErrorPassword("");
+        setErrorConfirmPassword("");
+        signupSchema.validateSync({email, password, confirmPassword});
+        triggerSignUp({email, password, returnSecureToken: true});
     } catch (err) {
-          switch (err.path) {
-            case "email":
-                setErrorMail("email invalido");
-                break;
-            case "password":
-                setErrorPassword("la contraseña debe ser mayor a 8 caracteres");
-                break;
-            case "confirmPassword":
-                setErrorConfirmPassword("Las contraseñas no coinciden");
-                break;
-          }
+        switch (err.path) {
+          case "email":
+            setErrorMail("email invalido");
+            break;
+          case "password":
+            setErrorPassword("la contraseña debe ser mayor a 8 caracteres");
+            break;
+          case "confirmPassword":
+            setErrorConfirmPassword("Las contraseñas no coinciden");
+            break;
+        }
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
       <TextInput
-        style={[styles.input, errorMail && styles.errorInput]}
+        style={[styles.input, styles.emailinput, errorMail && styles.errorInput]}
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
@@ -72,9 +75,12 @@ const Signup = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
+      <View style={styles.progressBarContainer}>
+        <ProgressBar progress={getProgress(password)} color={getColor(password)} style={styles.progressBar} />
+      </View>
       {errorPassword ? <Text style={styles.errorMessage}>{errorPassword}</Text> : null}
       <TextInput
-        style={[styles.input, errorConfirmPassword && styles.errorInput]}
+        style={[styles.input, styles.lastInput, errorConfirmPassword && styles.errorInput]}
         placeholder="Confirm Password"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
@@ -111,11 +117,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
   },
+  emailinput:{
+    bottom: 6,
+  },
+  lastInput: {
+    bottom: 10
+  },
   button: {
     backgroundColor: 'blue',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 15,
     marginTop: 20,
   },
   buttonText: {
@@ -134,6 +146,16 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: 'red',
     marginBottom: 5,
+  },
+  progressBarContainer: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  progressBar: {
+    height: 5, 
   },
 });
 

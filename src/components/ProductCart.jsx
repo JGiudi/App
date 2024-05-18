@@ -12,14 +12,12 @@ const ProductItem = ({ product, navigation }) => {
   const handleRemove = () => {
     dispatch(removeCartItem({ id: product.id }))
   }
-  const handleIncrement = () =>{
-    dispatch(increment({id: product.id}))
-    console.log("hice click")
-  }
-  const handleDecrement = () =>{
-    dispatch(decrement({id: product.id}))
-    console.log("hice click")
-  }
+  // const handleIncrement = () =>{
+  //   dispatch(increment({id: product.id}))
+  // }
+  // const handleDecrement = () =>{
+  //   dispatch(decrement({id: product.id}))
+  // }
 
   return (
     <Pressable onPress={() => navigation.navigate('Detail', { productId: product.id })}>

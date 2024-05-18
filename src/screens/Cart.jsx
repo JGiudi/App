@@ -2,8 +2,6 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import ProductCart from '../components/ProductCart'
-import { removeCartItem } from '../features/Cart/cartSlice'
-import { usePostOrderMutation } from '../services/shopService'
 
 const Cart = () => {
   const { items } = useSelector(state => state.cart.value)
@@ -18,7 +16,7 @@ const Cart = () => {
         renderItem={({ item }) => <ProductCart product={item} />}
       />
       <View style={styles.totalContainer}>
-        <Pressable style={styles.confirmButton} onPress={() => console.log("Confirmado")}>
+        <Pressable style={styles.confirmButton}>
           <Text style={styles.confirmButtonText}>Confirm</Text>
         </Pressable>
         <Text style={styles.totalText}>Total: ${total.toFixed(2)}</Text>

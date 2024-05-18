@@ -4,15 +4,13 @@ import { Provider } from 'react-redux';
 import store from './src/store';
 import { dropSessionsTable, initSQLiteDB } from "./src/persistence"
 
-(async ()=> {
+(async () => {
   try {
-      const response = await initSQLiteDB()
-      console.log({responseCreatingDB: response});
-      console.log("DB initialized");
+    await initSQLiteDB();
   } catch (error) {
-      console.log({errorCreatingDB: error});
+    console.error(error);
   }
-})()
+})();
 
 export default function App() {
   return (
@@ -20,7 +18,6 @@ export default function App() {
       <Provider store={store}>
         <Navigator/>
       </Provider>
-      
     </SafeAreaView>
   );
 
