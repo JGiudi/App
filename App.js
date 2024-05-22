@@ -1,4 +1,4 @@
-import { StyleSheet, SafeAreaView, View } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Platform } from 'react-native';
 import Navigator from "./src/navigation/Navigator"
 import { Provider } from 'react-redux';
 import store from './src/store';
@@ -6,9 +6,10 @@ import { dropSessionsTable, initSQLiteDB } from "./src/persistence"
 
 (async () => {
   try {
-    await initSQLiteDB();
+    if (Platform.OS !== 'web') {
+      const response =     await initSQLiteDB();
+    }
   } catch (error) {
-    console.error(error);
   }
 })();
 

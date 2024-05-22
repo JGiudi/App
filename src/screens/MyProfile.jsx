@@ -1,67 +1,84 @@
-import { Image, StyleSheet, View, Button } from "react-native"
-import React from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { useGetProfileImageQuery } from "../services/shopService"
-import { clearUser } from "../features/User/userSlice"
-import { truncateSessionsTable } from "../persistence"
+import { Image, StyleSheet, View, Button } from "react-native";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetProfileImageQuery, usePostProfileImageMutation } from "../services/shopService";
+import { clearUser } from "../features/User/userSlice";
+import { truncateSessionsTable } from "../persistence";
 
 const MyProfile = ({ navigation }) => {
-    
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const { imageCamera, localId } = useSelector((state) => state.auth.value);
+    const { data: imageFromBase, refetch } = useGetProfileImageQuery(localId, { skip: !localId });
+    const [postProfileImage] = usePostProfileImageMutation();
+    const [profileImage, setProfileImage] = useState(null);
 
-    const { imageCamera, localId } = useSelector((state) => state.auth.value)
-    const { data: imageFromBase } = useGetProfileImageQuery(localId)
+    useEffect(() => {
+        if (localId) {
+            refetch();
+        }
+    }, [localId, refetch]);
+
+    useEffect(() => {
+        if (imageFromBase?.image) {
+            setProfileImage(imageFromBase.image);
+        } else if (imageCamera) {
+            setProfileImage(imageCamera);
+        } else {
+            setProfileImage(null);
+        }
+    }, [imageFromBase, imageCamera]);
 
     const launchCamera = async () => {
-        navigation.navigate("Image selector")
-    }
+        navigation.navigate("Image selector");
+        // Simular el guardado de la imagen y luego refetch
+        setTimeout(() => {
+            refetch();
+        }, 1000); // Ajusta el tiempo según sea necesario
+    };
+
+    const saveImage = async (image) => {
+        if (localId) {
+            await postProfileImage({ image, localId });
+            refetch();
+        } else {
+            console.error("No se puede guardar la imagen: localId es undefined.");
+        }
+    };
 
     const launchLocation = async () => {
-        navigation.navigate('List Address')
-    }
+        navigation.navigate("List Address");
+    };
 
     const signOut = async () => {
         try {
-            const response = await truncateSessionsTable()
-
-            dispatch(clearUser())
+            await truncateSessionsTable();
+            dispatch(clearUser());
+            setProfileImage(null); // Resetea la imagen a null en el sign out
         } catch (error) {
-
+            console.error(error);
         }
-    }
+    };
 
-    const defaultImageRoute = "../../assets/images/defaultProfile.png"
+    const defaultImageRoute = "../../assets/images/defaultProfile.png";
 
     return (
         <View style={styles.container}>
-            {imageFromBase || imageCamera ? (
-                <Image
-                    source={{ uri: imageFromBase?.image || imageCamera }}
-                    style={styles.image}
-                    resizeMode="cover"
-                />
-            ) : (
-                <Image
-                    source={require(defaultImageRoute)}
-                    style={styles.image}
-                    resizeMode="cover"
-                />
-            )}
+            <Image
+                source={profileImage ? { uri: profileImage } : require(defaultImageRoute)}
+                style={styles.image}
+                resizeMode="cover"
+            />
             <Button
                 onPress={launchCamera}
-                title={
-                    imageFromBase || imageCamera
-                        ? "Cambiar la foto de perfil"
-                        : "Agregar foto de perfil"
-                }
+                title={profileImage ? "Cambiar la foto de perfil" : "Agregar foto de perfil"}
             />
             <Button onPress={launchLocation} title="Mi dirección" />
-            <Button onPress={signOut} title="cerrar sesión" />
+            <Button onPress={signOut} title="Cerrar sesión" />
         </View>
-    )
-}
+    );
+};
 
-export default MyProfile
+export default MyProfile;
 
 const styles = StyleSheet.create({
     container: {
@@ -75,4 +92,4 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 50,
     },
-})
+});

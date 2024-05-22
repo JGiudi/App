@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Image, View, StyleSheet, Text, Button } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as ExpoLibrary from "expo-media-library";
@@ -48,7 +48,6 @@ const ImageSelector = ({ navigation }) => {
                 }
             }
         } catch (error) {
-
         }
     }
 
@@ -76,7 +75,6 @@ const ImageSelector = ({ navigation }) => {
             }
             
         } catch (error) {
-
         }
 
     };
@@ -90,9 +88,19 @@ const ImageSelector = ({ navigation }) => {
             }
             navigation.goBack()
         } catch (error) {
-
         }
     };
+    
+
+    useEffect(() => {
+        const createAssetAsync = async () => {
+            if (isImageFromCamera) {
+                const result = await ExpoLibrary.createAssetAsync(imageURI);
+            }
+        };
+    
+        createAssetAsync();
+    }, [isImageFromCamera]);
 
     return (
         <View style={styles.container}>
